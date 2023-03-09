@@ -26,47 +26,43 @@ def print_board(board):
     print(ends)
 
 
-# Okay, so what about checking if the ships are overlapping? - not working yet
-def check_overlap(coordinates):
+# Okay, so what about checking if the ships are overlapping? - not working yet - working now??
+def check_overlap(coordinates, ship):
+    taken = False
     for coords in coordinates:
-        if any(coords in ship for ship in ships):
+        if any(coords in ship_list for ship_list in ships):
+            taken = True
             break
-        else:
-            ships.append(coordinates)
     
-    print(ships)
+    if taken:
+        return create_ships(ship)
+    else:
+        ships.append(coordinates)
+    # print(ships)
 
 
 # # Okay, now create five ships
-def create_ships():
-    # Get one of the ships
-    sizes = [2, 3, 3, 4, 5]
-
-    while len(ships) < 5:
-        ship = sizes.pop(0)
-    # for ship in sizes:
-        start = randint(1, 2)
-        if start + ship <= 10:
-            direction = randint(0, 1)
-            if direction == 0:
-                col_letters = []
-                row_nums = list(range(start, start + ship))
-                col_nums = [randint(1, 10)] * ship
-                for col in col_nums:
-                    col_letter = chr(col + 97)
-                    col_letters.append(col_letter)
-                coordinates = list(zip(row_nums, col_letters))
-                check_overlap(coordinates)
-
-            else:
-                col_letters = []
-                col_list = list(range(start, start + ship))
-                for col in col_list:
-                    col_letter = chr(col + 97)
-                    col_letters.append(col_letter)
-                row = [randint(1, 10)] * ship
-                coordinates = list(zip(row, col_letters))
-                check_overlap(coordinates)
+def create_ships(ship):
+    start = randint(1, 10 - ship)
+    direction = randint(0, 1)
+    if direction == 0:
+        col_letters = []
+        row_nums = list(range(start, start + ship))
+        col_nums = [randint(1, 10)] * ship
+        for col in col_nums:
+            col_letter = chr(col + 96)
+            col_letters.append(col_letter)
+        coordinates = list(zip(row_nums, col_letters))
+        check_overlap(coordinates, ship)
+    else:
+        col_letters = []
+        col_list = list(range(start, start + ship))
+        for col in col_list:
+            col_letter = chr(col + 96)
+            col_letters.append(col_letter)
+        row = [randint(1, 10)] * ship
+        coordinates = list(zip(row, col_letters))
+        check_overlap(coordinates, ship)
 
 
 # Check for a hit - should it also update the board???
@@ -101,16 +97,19 @@ def check_hit(guess):
 
 
 def get_input():
+    guess = ()
+    print(f"There are {len(ships)} battleships remaining.")
+    print("Enter the coordinates for your missile below!")
     while True:
-        row = int(input("Enter row: "))
-        guess = ()
-        if row not in range(1, 11):
+        row_num = input("Enter row: ").strip()
+        if row_num is "" or row_num not in "12345678910":
             print("Please enter a valid row.")
         else:
+            row = int(row_num)
             guess = guess + (row, )
             break
     while True:
-        col = input("Enter column: ").lower()
+        col = input("Enter column: ").strip().lower()
         if col not in "abcdefghij":
             print("Please enter a valid column: ")
         else:
@@ -120,13 +119,19 @@ def get_input():
 
 
 def startGame():
+    sizes = [2, 3, 3, 4, 5]
+
     print("Welcome to Battleships!")
     print("When prompted, enter the row number, then column letter you wish to attack.")
     print("Destroy all 5 of the computer's ships to win!")
     print_board(BOARD)
-    create_ships()
+
+    while len(ships) < 5:
+        ship = sizes.pop(0)
+        create_ships(ship)
 
 
+# HMMM how to properly end game and offer to play again???
 def endGame():
     print("You sunk all the battleships!")
     play_again = input("Play again? yes/no: ").lower()
@@ -136,10 +141,14 @@ def endGame():
         print("SEE YA!")
 
 
-if __name__ == "__main__":
+def main():
     startGame()
 
     while len(ships) > 0:
         get_input()
 
     endGame()
+
+
+if __name__ == "__main__":
+    main()
