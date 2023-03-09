@@ -1,11 +1,7 @@
 """
 Simple battleship game - just print a board, spawn ships, take user input, check hits
 """
-
 from random import randint
-
-ROWS = 10
-COLS = 10
 
 BOARD = [[" "] * 10 for x in range(10)]
 ships = []
@@ -118,7 +114,7 @@ def get_input():
     check_hit(guess)
 
 
-def startGame():
+def start_game():
     sizes = [2, 3, 3, 4, 5]
 
     print("Welcome to Battleships!")
@@ -132,22 +128,22 @@ def startGame():
 
 
 # HMMM how to properly end game and offer to play again???
-def endGame():
+def end_game():
     print("You sunk all the battleships!")
     play_again = input("Play again? yes/no: ").lower()
     if play_again == "yes":
-        startGame()
+        start_game()
     else:
         print("SEE YA!")
 
 
 def main():
-    startGame()
+    start_game()
 
     while len(ships) > 0:
         get_input()
 
-    endGame()
+    end_game()
 
 
 if __name__ == "__main__":
