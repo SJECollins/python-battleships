@@ -30,7 +30,7 @@ ships = []
 
 def add_ships():
     # Get one of the ships
-    sizes = [2, 3, 3, 4, 5]
+    sizes = [1, 3, 3, 4, 5]
 
     for ship in sizes:
         start = randint(0, 1)
@@ -45,6 +45,7 @@ def add_ships():
                     col_letters.append(col_letter)
                 coordinates = list(zip(row_nums, col_letters))
                 print(coordinates)
+                ships.append(coordinates)
 
             else:
                 col_letters = []
@@ -55,21 +56,38 @@ def add_ships():
                 row = [randint(1, 10)] * ship
                 coordinates = list(zip(row, col_letters))
                 print(coordinates)
-                if coordinates not in ships:
-                    ships.append(coordinates)
-                    print("ships: ", ships)
+                ships.append(coordinates)
+    
+    print(ships)
+    print(len(ships))
 # Need to check for overlap!
 
 add_ships()
 
-def check_hit(ships, guess):
+# Check for a hit - should it also update the board???
+def check_hit(guess):
     print("called")
     print(ships)
+    hit = False
     for ship in ships:
-        print(ship)
-        print(guess)
         if guess in ship:
-            print("hit")
+            hit = True
+            print(ship)
+            if len(ship) == 1:
+                ships.remove(ship)
+                print("you sunk my battleship!")
+                print(f"{len(ships)} left")
+            else:
+                ship.remove(guess)
+                print(ship)
+    
+    if hit:
+        print("hit")
+    else:
+        print("miss")
+
+    print(ships)
+
 
 def get_input():
     row = int(input("Enter row: "))
@@ -88,16 +106,14 @@ def get_input():
     print(col, row)
     print(guess)
     # return guess
-    check_hit(ships, guess)
+    check_hit(guess)
 
 
 get_input()
-# Guess that sort of works!
 
-# So, now... check hits??
 
-# def check_hit(ships, guess):
-#     for ship in ships:
-#         if guess in ships:
-#             print("hit")
+# Okay, so what about checking if the ships are overlapping?
+
+def check_overlap():
+    
 
